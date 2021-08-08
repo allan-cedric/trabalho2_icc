@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "random": "cpp",
+        "core": "cpp",
+        "lu": "cpp",
+        "likwid.h": "c"
+    }
+}
