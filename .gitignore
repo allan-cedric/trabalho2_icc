@@ -1,3 +1,4 @@
+.vscode/
 *.sol
 *.sh
 *.o
