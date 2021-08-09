@@ -35,3 +35,10 @@ void swap_items(void *a, void *b, size_t size)
         pb[i] = temp;
     }
 }
+
+void print_real_array(real_t *arr, size_t size)
+{
+    for (size_t i = 0; i < size; i++)
+        printf("%.20g ", arr[i]);
+    printf("\n");
+}

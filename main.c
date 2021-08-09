@@ -3,11 +3,12 @@
 
 int main()
 {
-    LIKWID_MARKER_INIT;
+    // LIKWID_MARKER_INIT;
 
+    int ret;
     int n; // Número de valores tabelados
     int m; // Número de funções tabeladas
-    scanf("%i %i", &n, &m);
+    ret = scanf("%i %i", &n, &m);
 
     real_t *x = (real_t *)malloc(n * sizeof(real_t)); // Aloca o vetor de valores tabelados
     alloc_test(x);
@@ -16,22 +17,54 @@ int main()
 
     // Leitura dos valores tabelados
     for (int i = 0; i < n; i++)
-        scanf("%lf", &x[i]);
+        ret = scanf("%lf", &x[i]);
 
-    lin_system_t *ls_interpol = alloc_lin_system(n); // Aloca o sistema linear para interpolação
-    gen_poly_interpol_coef(x, ls_interpol);          // Gera a matriz de coeficientes para interpolação
+    lin_system_t *ls_interpol = alloc_lin_system(n);  // Aloca o sistema linear para interpolação
+    lin_system_t *ls_curve = alloc_lin_system(n); // Aloca o sistema linear para "ajuste de curva"
+
+    gen_poly_interpol_coef(x, ls_interpol); // Gera a matriz de coeficientes para interpolação
+    gen_curve_coef(x, ls_curve);            // Gera a matriz de coeficientes para "ajuste de curva"
+
+    // --- Decomposição LU das matrizes de coeficientes ---
+    double rtime;
+    LU_decomp(&ls_interpol->A, &ls_interpol->L, &ls_interpol->U, ls_interpol->P, 1, &rtime);
+    LU_decomp(&ls_curve->A, &ls_curve->L, &ls_curve->U, ls_curve->P, 1, &rtime);
 
     for (int j = 0; j < m; j++)
     {
         // Leitura de uma função nos valores tabelados
         for (int i = 0; i < n; i++)
-            scanf("%lf", &y[i]);
+            ret = scanf("%lf", &y[i]);
 
         // --- Interpolação polinomial ---
+        memcpy(ls_interpol->b, y, ls_interpol->n * sizeof(real_t));
+
+        real_t *solution = solve_lin_system(ls_interpol);
+        if (solution)
+            print_real_array(solution, ls_interpol->n);
+
+        free(solution);
+        solution = NULL;
 
         // --- Ajuste de curvas ---
+        gen_curve_b(x, y, ls_curve);
+
+        solution = solve_lin_system(ls_curve);
+        if (solution)
+            print_real_array(solution, ls_curve->n);
+
+        free(solution);
+        solution = NULL;
     }
 
-    LIKWID_MARKER_CLOSE;
+    free(x);
+    x = NULL;
+    free(y);
+    y = NULL;
+
+    free_lin_system(ls_interpol);
+    free_lin_system(ls_curve);
+
+    // LIKWID_MARKER_CLOSE;
     return 0;
 }

@@ -2,6 +2,7 @@ PROG   = main
 
 CC = gcc -std=c11 -g -O3 -mavx2 -march=native
 OBJS = main.o \
+matrix.o \
 lin_system.o \
 interpol.o \
 utils.o

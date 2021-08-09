@@ -43,4 +43,12 @@ void alloc_test(void *p);
 */
 void swap_items(void *a, void *b, size_t size);
 
+/*!
+    \brief  Imprime um vetor real
+
+    \param  arr     Vetor real
+    \param  size    Tamanho do vetor    
+*/
+void print_real_array(real_t *arr, size_t size);
+
 #endif
