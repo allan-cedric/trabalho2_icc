@@ -22,10 +22,10 @@ int main()
     lin_system_t *ls_interpol = alloc_lin_system(n); // Aloca o sistema linear para interpolação
     lin_system_t *ls_curve = alloc_lin_system(n);    // Aloca o sistema linear para "ajuste de curva"
 
-    gen_poly_interpol_coef(x, ls_interpol); // Gera a matriz de coeficientes para interpolação
+    gen_poly_interpol_matcoef(x, ls_interpol); // Gera a matriz de coeficientes para interpolação
 
     LIKWID_MARKER_START("gen-curve-coef");
-    gen_curve_coef(x, ls_curve); // Gera a matriz de coeficientes para "ajuste de curva"
+    gen_curve_matcoef(x, ls_curve); // Gera a matriz de coeficientes para "ajuste de curva"
     LIKWID_MARKER_STOP("gen-curve-coef");
 
     // --- Decomposição LU das matrizes de coeficientes ---
@@ -57,7 +57,7 @@ int main()
         solution = NULL;
 
         // --- Ajuste de curvas ---
-        gen_curve_b(x, y, ls_curve);
+        gen_curve_matb(x, y, ls_curve);
 
         solution = solve_lin_system(ls_curve);
         if (solution)
