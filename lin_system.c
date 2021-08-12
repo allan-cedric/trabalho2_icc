@@ -48,6 +48,47 @@ void free_lin_system(lin_system_t *ls)
     }
 }
 
+int LU_decomp_optimized(lin_system_t *ls)
+{
+    ls->L.A = (real_t *)calloc(ls->L.n * ls->L.n, sizeof(real_t)); // Aloca matriz L
+    alloc_test(ls->L.A);
+
+    copy_matrix(&ls->A, &ls->U); // Cópia da matriz original 'A' na matriz 'U'
+
+    // Decomposição LU
+    for (int i = 0; i < ls->U.n; i++)
+    {
+        // Tratamento do pivoteamento parcial
+        int p_index = pivot_index(&ls->U, i);
+        if (p_index != i)
+        {
+            swap_matrix_lines(&ls->U, i, p_index);
+            swap_matrix_lines(&ls->L, i, p_index);
+        }
+        ls->P[i] = p_index; // Par de linhas: (i, p_index)
+
+        int diag_index = i * ls->U.n + i;
+        // Caso tenha um zero na diagonal principal, não tem inversa
+        if (fabs(ls->U.A[diag_index]) <= DBL_EPSILON)
+            return INV_MAT_ERROR;
+
+        // Geração da matriz L e U
+        ls->L.A[diag_index] = 1.0; // L(i, i) = 1.0
+        for (int k = i + 1; k < ls->U.n; k++)
+        {
+            int index = k * ls->U.n + i;
+            real_t mp = ls->U.A[index] / ls->U.A[diag_index]; // mp = U(k, i)/U(i, i)
+            ls->L.A[index] = mp;                              // L(k, i) = mp
+            ls->U.A[index] = 0.0;                             // U(k, i) = 0.0
+
+            int line_k = k * ls->U.n, line_i = i * ls->U.n;
+            for (int j = i + 1; j < ls->U.n; j++)
+                ls->U.A[line_k + j] -= (ls->U.A[line_i + j] * mp); // U(k, j) -= U(i, j) * mp
+        }
+    }
+    return 0;
+}
+
 real_t *solve_lin_system(lin_system_t *ls)
 {
     if (!ls->L.A || !ls->U.A)
@@ -62,21 +103,25 @@ real_t *solve_lin_system(lin_system_t *ls)
     real_t *y = (real_t *)malloc(ls->n * sizeof(real_t));
     alloc_test(y);
 
-    // Troca as linhas do vetor identidade, caso tenha pivoteamento
+    real_t *b = (real_t *)malloc(ls->n * sizeof(real_t));
+    alloc_test(b);
+    memcpy(b, ls->b, ls->n * sizeof(real_t));
+
+    // Troca as linhas do vetor b, caso tenha pivoteamento
     for (int i = 0; i < ls->n - 1; i++)
     {
         if (ls->P[i] != i) // Troca se as linhas do par forem distintas
-            swap_items(&ls->b[i], &ls->b[ls->P[i]], sizeof(real_t));
+            swap_items(&b[i], &b[ls->P[i]], sizeof(real_t));
     }
 
     // ------------------------------------
     // Resolução do sistema linear
     // ------------------------------------
 
-    // Retrossubstituicao L x y = ls->b
+    // Retrossubstituicao L x y = b
     for (int i = 0; i < ls->n; i++)
     {
-        y[i] = ls->b[i];
+        y[i] = b[i];
         int line = i * ls->n;
         for (int j = 0; j < i; j++)
             // y[i] -= L(i, j) * y[j]
@@ -97,6 +142,9 @@ real_t *solve_lin_system(lin_system_t *ls)
 
     free(y);
     y = NULL;
+
+    free(b);
+    b = NULL;
 
     return x;
 }

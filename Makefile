@@ -1,7 +1,14 @@
-PROG   = main
+PROG_1   = main
+PROG_2   = main_optimized
 
 CC = gcc -std=c11 -g -O3 -mavx2 -march=native
-OBJS = main.o \
+OBJS_MAIN = main.o \
+matrix.o \
+lin_system.o \
+interpol.o \
+utils.o
+
+OBJS_MAIN_OP = main_optimized.o \
 matrix.o \
 lin_system.o \
 interpol.o \
@@ -15,14 +22,19 @@ LFLAGS = -L$(LIKWID_LIB) -lm -llikwid
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $<
 
-all: $(PROG)
+all: $(PROG_1) $(PROG_2)
 
 debug:         CFLAGS += -DDEBUG
-debug:         $(PROG)
+debug:         $(PROG_1) $(PROG_2)
 
-$(PROG):  $(PROG).o
+$(PROG_1):  $(PROG_1).o
 
-$(PROG): $(OBJS) 
+$(PROG_1): $(OBJS_MAIN) 
+	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
+
+$(PROG_2):  $(PROG_2).o
+
+$(PROG_2): $(OBJS_MAIN_OP) 
 	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
 
 clean limpa:
@@ -31,5 +43,5 @@ clean limpa:
 
 purge faxina:   clean
 	@echo "Faxina ...."
-	@rm -f  $(PROG) *.o core a.out
+	@rm -f  $(PROG_1) $(PROG_2) *.o core a.out
 	@rm -f *.png marker.out *.log

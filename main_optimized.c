@@ -30,13 +30,13 @@ int main()
 
     // --- Decomposição LU das matrizes de coeficientes ---
     double rtime;
-    LIKWID_MARKER_START("LU-U-1");
-    LU_decomp(&ls_interpol->A, &ls_interpol->L, &ls_interpol->U, ls_interpol->P, 1, &rtime);
-    LIKWID_MARKER_STOP("LU-U-1");
+    LIKWID_MARKER_START("LU-O-1");
+    LU_decomp_optimized(ls_interpol);
+    LIKWID_MARKER_STOP("LU-O-1");
 
-    LIKWID_MARKER_START("LU-U-2");
-    LU_decomp(&ls_curve->A, &ls_curve->L, &ls_curve->U, ls_curve->P, 1, &rtime);
-    LIKWID_MARKER_STOP("LU-U-2");
+    LIKWID_MARKER_START("LU-O-2");
+    LU_decomp_optimized(ls_curve);
+    LIKWID_MARKER_STOP("LU-O-2");
 
     for (int j = 0; j < m; j++)
     {

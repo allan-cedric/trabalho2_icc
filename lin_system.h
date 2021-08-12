@@ -31,6 +31,8 @@ lin_system_t *alloc_lin_system(int n);
 */
 void free_lin_system(lin_system_t *ls);
 
+int LU_decomp_optimized(lin_system_t *ls);
+
 /*!
     \brief  Resolve um sistema linear de ordem n (Método de fatoração LU)
 

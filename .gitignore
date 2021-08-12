@@ -3,3 +3,4 @@
 *.sh
 *.o
 main
+main_optimized
