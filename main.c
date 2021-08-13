@@ -30,7 +30,6 @@ int main()
     gen_curve_matcoef(x, ls_curve); // Gera a matriz de coeficientes para "ajuste de curva"
 
     // --- Decomposição LU das matrizes de coeficientes ---
-    double rtime;
     LU_decomp_optimized(ls_interpol);
     LU_decomp_optimized(ls_curve);
 
