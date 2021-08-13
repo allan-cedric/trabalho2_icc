@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# Allan Cedric G. B. Alves da Silva - GRR20190351
+# Gabriel N. H. do Nascimento - GRR20190361
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -53,8 +56,9 @@ tables = {}
 for filename in filename_to_field:
     tables[filename] = pd.read_csv(filename, delimiter='\t')
 
-# Dados do tamanho (Eixo X)
-x_data = tables["./Resultados/runtime-Aj-MatCoef.tsv"]["n"] # A coluna 'n' de todas as tabelas é igual
+# --- Dados da ordem das matrizes (Eixo X) ---
+# A coluna 'n' de todas as tabelas é igual
+x_data = tables["./Resultados/runtime-Aj-MatCoef.tsv"]["n"] 
 x_data = np.array(x_data)
 x_data_smooth = np.linspace(x_data.min(), x_data.max(), x_data.max() - x_data.min() + 1)
 
