@@ -1,6 +1,7 @@
 .vscode/
+Resultados/
 *.sol
-*.sh
+sample.sh
 *.o
 main
 main_optimized

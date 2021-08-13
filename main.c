@@ -24,9 +24,9 @@ int main()
 
     gen_poly_interpol_matcoef(x, ls_interpol); // Gera a matriz de coeficientes para interpolação
 
-    LIKWID_MARKER_START("gen-curve-coef");
+    LIKWID_MARKER_START("gen-curve-matcoef");
     gen_curve_matcoef(x, ls_curve); // Gera a matriz de coeficientes para "ajuste de curva"
-    LIKWID_MARKER_STOP("gen-curve-coef");
+    LIKWID_MARKER_STOP("gen-curve-matcoef");
 
     // --- Decomposição LU das matrizes de coeficientes ---
     double rtime;
