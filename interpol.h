@@ -1,3 +1,11 @@
+// Header file: 'interpol.h'
+// Autores:
+// Allan Cedric G. B. Alves da Silva - GRR20190351
+// Gabriel N. Hishida do Nascimento - GRR20190361
+
+// Biblioteca que implementa funções para geração dos coeficientes
+// dos sistemas lineares que resolve problemas de interpolação e ajuste de curvas
+
 #ifndef __INTERPOL_H__
 #define __INTERPOL_H__
 
