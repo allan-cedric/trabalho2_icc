@@ -1,3 +1,6 @@
+# Allan Cedric G. B. Alves da Silva - GRR20190351
+# Gabriel N. H. do Nascimento - GRR20190361
+
 PROG_1   = main
 PROG_2   = main_optimized
 
