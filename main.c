@@ -24,19 +24,19 @@ int main()
 
     gen_poly_interpol_matcoef(x, ls_interpol); // Gera a matriz de coeficientes para interpolação
 
-    LIKWID_MARKER_START("gen-curve-matcoef");
+    LIKWID_MARKER_START("Aj-MatCoef");
     gen_curve_matcoef(x, ls_curve); // Gera a matriz de coeficientes para "ajuste de curva"
-    LIKWID_MARKER_STOP("gen-curve-matcoef");
+    LIKWID_MARKER_STOP("Aj-MatCoef");
 
     // --- Decomposição LU das matrizes de coeficientes ---
     double rtime;
-    LIKWID_MARKER_START("LU-U-1");
+    LIKWID_MARKER_START("It-LU-Unoptimized");
     LU_decomp(&ls_interpol->A, &ls_interpol->L, &ls_interpol->U, ls_interpol->P, 1, &rtime);
-    LIKWID_MARKER_STOP("LU-U-1");
+    LIKWID_MARKER_STOP("It-LU-Unoptimized");
 
-    LIKWID_MARKER_START("LU-U-2");
+    LIKWID_MARKER_START("Aj-LU-Unoptimized");
     LU_decomp(&ls_curve->A, &ls_curve->L, &ls_curve->U, ls_curve->P, 1, &rtime);
-    LIKWID_MARKER_STOP("LU-U-2");
+    LIKWID_MARKER_STOP("Aj-LU-Unoptimized");
 
     for (int j = 0; j < m; j++)
     {

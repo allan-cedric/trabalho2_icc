@@ -6,39 +6,39 @@ import os
 
 # LIKWID Markers
 markers = {
-    "gen-curve-matcoef": {},
-    "LU-U-1": {},
-    "LU-U-2": {},
-    "LU-O-1": {},
-    "LU-O-2": {}
+    "Aj-MatCoef": {},
+    "It-LU-Unoptimized": {},
+    "Aj-LU-Unoptimized": {},
+    "It-LU-Optimized": {},
+    "Aj-LU-Optimized": {}
 }
 
 # Arquivos das tabelas
 tables_filename = [
-    './Resultados/runtime-gen-curve-matcoef.tsv',
-    './Resultados/l2missratio-gen-curve-matcoef.tsv',
-    './Resultados/dpavx-gen-curve-matcoef.tsv',
-    './Resultados/l3bandwith-gen-curve-matcoef.tsv',
+    './Resultados/runtime-Aj-MatCoef.tsv',
+    './Resultados/l2missratio-Aj-MatCoef.tsv',
+    './Resultados/dpavx-Aj-MatCoef.tsv',
+    './Resultados/l3bandwith-Aj-MatCoef.tsv',
 
-    './Resultados/runtime-LU-U-1.tsv',
-    './Resultados/l2missratio-LU-U-1.tsv',
-    './Resultados/dpavx-LU-U-1.tsv',
-    './Resultados/l3bandwith-LU-U-1.tsv',
+    './Resultados/runtime-It-LU-Unoptimized.tsv',
+    './Resultados/l2missratio-It-LU-Unoptimized.tsv',
+    './Resultados/dpavx-It-LU-Unoptimized.tsv',
+    './Resultados/l3bandwith-It-LU-Unoptimized.tsv',
 
-    './Resultados/runtime-LU-U-2.tsv',
-    './Resultados/l2missratio-LU-U-2.tsv',
-    './Resultados/dpavx-LU-U-2.tsv',
-    './Resultados/l3bandwith-LU-U-2.tsv',
+    './Resultados/runtime-Aj-LU-Unoptimized.tsv',
+    './Resultados/l2missratio-Aj-LU-Unoptimized.tsv',
+    './Resultados/dpavx-Aj-LU-Unoptimized.tsv',
+    './Resultados/l3bandwith-Aj-LU-Unoptimized.tsv',
 
-    './Resultados/runtime-LU-O-1.tsv',
-    './Resultados/l2missratio-LU-O-1.tsv',
-    './Resultados/dpavx-LU-O-1.tsv',
-    './Resultados/l3bandwith-LU-O-1.tsv',
+    './Resultados/runtime-It-LU-Optimized.tsv',
+    './Resultados/l2missratio-It-LU-Optimized.tsv',
+    './Resultados/dpavx-It-LU-Optimized.tsv',
+    './Resultados/l3bandwith-It-LU-Optimized.tsv',
 
-    './Resultados/runtime-LU-O-2.tsv',
-    './Resultados/l2missratio-LU-O-2.tsv',
-    './Resultados/dpavx-LU-O-2.tsv',
-    './Resultados/l3bandwith-LU-O-2.tsv'
+    './Resultados/runtime-Aj-LU-Optimized.tsv',
+    './Resultados/l2missratio-Aj-LU-Optimized.tsv',
+    './Resultados/dpavx-Aj-LU-Optimized.tsv',
+    './Resultados/l3bandwith-Aj-LU-Optimized.tsv'
 ]
 
 # Agrupamento das tabelas
@@ -78,20 +78,25 @@ while line:
         for pattern in ["L2 miss ratio", "DP [MFLOP/s]", "AVX DP [MFLOP/s]", "RDTSC Runtime [s]",
                         "L3 bandwidth [MBytes/s]"]:
             if line.find(pattern) == 0:
-
-                # Soma dos Runtime's
-                if pattern == "RDTSC Runtime [s]":
-                    markers[current][pattern] = markers[current].get(
-                        pattern, 0) + eval(line.split(",")[1])
-                else:
-                    markers[current][pattern] = eval(line.split(",")[1])
-
+                markers[current][pattern] = (markers[current].get(pattern, 0) +
+                                            eval(line.split(",")[1]))
     try:
         line = input()
     except EOFError:
-        # Média dos Runtime's
+
+        # Média aritmética simples de valores acumulados
         for key in markers.keys():
-            markers[key]["RDTSC Runtime [s]"] /= 3
+
+            if "Aj-MatCoef" in key: # Caso seja métricas da função gen_curve_matcoef()
+                
+                # Todas as métricas menos 'RDTSC Runtime [s]' aparecem 2 vezes.
+                for k in markers[key].keys():
+                    if k != "RDTSC Runtime [s]":
+                        markers[key][k] /= 2
+                markers[key]["RDTSC Runtime [s]"] /= 6 # Aparece 6 vezes   
+
+            else:
+                markers[key]["RDTSC Runtime [s]"] /= 3 # Aparece 3 vezes
             markers[key]["RDTSC Runtime [s]"] *= 1000  # ms
 
         i = 0
