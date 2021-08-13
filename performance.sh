@@ -21,17 +21,17 @@ do
 
     echo "$i" > temp
 
-    # Avaliação de desempenho programa 'main'
-    echo -n "(main) FLOPS_DP evaluation... "
-    likwid-perfctr -C $CORE -g FLOPS_DP -O -m ./main < entrada.in | grep -E "$PATTERN" >> temp
+    # Avaliação de desempenho programa 'main_unoptimized'
+    echo -n "(main_unoptimized) FLOPS_DP evaluation... "
+    likwid-perfctr -C $CORE -g FLOPS_DP -O -m ./main_unoptimized < entrada.in | grep -E "$PATTERN" >> temp
     echo "Done!"
 
-    echo -n "(main) L2CACHE evaluation... "
-    likwid-perfctr -C $CORE -g L2CACHE -O -m ./main < entrada.in | grep -E "$PATTERN" >> temp
+    echo -n "(main_unoptimized) L2CACHE evaluation... "
+    likwid-perfctr -C $CORE -g L2CACHE -O -m ./main_unoptimized < entrada.in | grep -E "$PATTERN" >> temp
     echo "Done!"
 
-    echo -n "(main) L3 evaluation... "
-    likwid-perfctr -C $CORE -g L3 -O -m ./main < entrada.in | grep -E "$PATTERN" >> temp
+    echo -n "(main_unoptimized) L3 evaluation... "
+    likwid-perfctr -C $CORE -g L3 -O -m ./main_unoptimized < entrada.in | grep -E "$PATTERN" >> temp
     echo "Done!"
 
     # Avaliação de desempenho programa 'main_optimized'
