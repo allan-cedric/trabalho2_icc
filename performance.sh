@@ -12,7 +12,7 @@ CORE=7
 mkdir -p Resultados
 rm -f ./Resultados/*
 
-for i in 5 6 7 10 32 50 64 100 128 200 256 300 400 512 1000
+for i in 10 32 50 64 100 128 200 256 300 400 512 1000
 do
     echo " --- n: $i ---"
     echo -n "Generating entry... "

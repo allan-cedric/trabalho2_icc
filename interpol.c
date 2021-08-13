@@ -49,8 +49,8 @@ void gen_curve_matcoef(real_t *x, lin_system_t *ls)
     // --- Restante das linhas ---
     for (int k = 1; k < ls->n; k++)
     {
-        // n termos a partir de A(k-1, 1) copiados para posição inicial A(k, 0)
-        memcpy(ls->A.A + k * ls->n, ls->A.A + (k - 1) * ls->n + 1, ls->n * sizeof(real_t));
+        // (n-1) termos a partir de A(k-1, 1) copiados para posição inicial A(k, 0)
+        memcpy(ls->A.A + k * ls->n, ls->A.A + (k - 1) * ls->n + 1, (ls->n - 1) * sizeof(real_t));
 
         // --- Calcula o último termo A(k, n - 1) da linha ---
         int last_index = k * ls->n + (ls->n - 1); // Índice (k, n - 1)
