@@ -1,5 +1,8 @@
 #!/usr/bin/bash
 
+# Allan Cedric G. B. Alves da Silva - GRR20190351
+# Gabriel N. H. do Nascimento - GRR20190361
+
 # Filtragem do LIKWID
 PATTERN="RDTSC Runtime|TABLE|L3|L2|FLOP"
 
@@ -47,6 +50,7 @@ do
     python3 analise.py < temp
 done
 
+# Gera os gráficos no diretório Resultados/
 python3 gera_plot.py
 
 rm -f ./temp ./entrada.in
