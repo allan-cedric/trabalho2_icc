@@ -1,4 +1,4 @@
-// Source file: 'main_unoptimized.c'
+// Source file: 'main_optimized.c'
 // Autores:
 // Allan Cedric G. B. Alves da Silva - GRR20190351
 // Gabriel N. Hishida do Nascimento - GRR20190361
@@ -36,7 +36,6 @@ int main()
     LIKWID_MARKER_STOP("Aj-MatCoef");
 
     // --- Decomposição LU das matrizes de coeficientes ---
-    double rtime;
     LIKWID_MARKER_START("It-LU-Optimized");
     LU_decomp_optimized(ls_interpol);
     LIKWID_MARKER_STOP("It-LU-Optimized");
