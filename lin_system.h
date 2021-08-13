@@ -1,10 +1,17 @@
+// Header file: 'lin_system.h'
+// Autores:
+// Allan Cedric G. B. Alves da Silva - GRR20190351
+// Gabriel N. Hishida do Nascimento - GRR20190361
+
+// Biblioteca que implementa estruturas e funções para sistemas lineares
+
 #ifndef __LIN_SYSTEM_H__
 #define __LIN_SYSTEM_H__
 
 // Bibliotecas
 #include "matrix.h"
 
-#define UNROLL_STEP 4
+#define UNROLL_STEP 4 // Passo para Unroll
 
 // Estrutura de dados de um sistema linear
 typedef struct lin_system_t
@@ -33,6 +40,13 @@ lin_system_t *alloc_lin_system(int n);
 */
 void free_lin_system(lin_system_t *ls);
 
+/*!
+    \brief  Versão otimizada da função 'LU_decomp' implementada em 'matrix.h'.
+
+    \param  ls  Sistema linear
+
+    \return Mesmo retorno de 'LU_decomp'
+*/
 int LU_decomp_optimized(lin_system_t *ls);
 
 /*!
