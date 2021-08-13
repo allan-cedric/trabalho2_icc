@@ -1,14 +1,17 @@
-// Source file: 'main.c'
+// Source file: 'main_unoptimized.c'
 // Autores:
 // Allan Cedric G. B. Alves da Silva - GRR20190351
 // Gabriel N. Hishida do Nascimento - GRR20190361
 
-// Versão definitiva/otimizada para resolver o trabalho 2
+// Versão não otimizada para análise de desempenho
 
 #include "interpol.h"
+#include <likwid.h>
 
 int main()
 {
+    LIKWID_MARKER_INIT;
+
     int ret;
     int n; // Número de valores tabelados
     int m; // Número de funções tabeladas
@@ -27,12 +30,20 @@ int main()
     lin_system_t *ls_curve = alloc_lin_system(n);    // Aloca o sistema linear para "ajuste de curva"
 
     gen_poly_interpol_matcoef(x, ls_interpol); // Gera a matriz de coeficientes para interpolação
+
+    LIKWID_MARKER_START("Aj-MatCoef");
     gen_curve_matcoef(x, ls_curve); // Gera a matriz de coeficientes para "ajuste de curva"
+    LIKWID_MARKER_STOP("Aj-MatCoef");
 
     // --- Decomposição LU das matrizes de coeficientes ---
     double rtime;
-    LU_decomp_optimized(ls_interpol);
-    LU_decomp_optimized(ls_curve);
+    LIKWID_MARKER_START("It-LU-Unoptimized");
+    LU_decomp(&ls_interpol->A, &ls_interpol->L, &ls_interpol->U, ls_interpol->P, 1, &rtime);
+    LIKWID_MARKER_STOP("It-LU-Unoptimized");
+
+    LIKWID_MARKER_START("Aj-LU-Unoptimized");
+    LU_decomp(&ls_curve->A, &ls_curve->L, &ls_curve->U, ls_curve->P, 1, &rtime);
+    LIKWID_MARKER_STOP("Aj-LU-Unoptimized");
 
     for (int j = 0; j < m; j++)
     {
@@ -73,5 +84,6 @@ int main()
     free_lin_system(ls_interpol);
     free_lin_system(ls_curve);
 
+    LIKWID_MARKER_CLOSE;
     return 0;
 }

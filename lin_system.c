@@ -77,13 +77,33 @@ int LU_decomp_optimized(lin_system_t *ls)
         for (int k = i + 1; k < ls->U.n; k++)
         {
             int index = k * ls->U.n + i;
+
             real_t mp = ls->U.A[index] / ls->U.A[diag_index]; // mp = U(k, i)/U(i, i)
             ls->L.A[index] = mp;                              // L(k, i) = mp
             ls->U.A[index] = 0.0;                             // U(k, i) = 0.0
 
-            int line_k = k * ls->U.n, line_i = i * ls->U.n;
-            for (int j = i + 1; j < ls->U.n; j++)
-                ls->U.A[line_k + j] -= (ls->U.A[line_i + j] * mp); // U(k, j) -= U(i, j) * mp
+            int line_k = k * ls->U.n; 
+            int line_i = i * ls->U.n;
+
+            // --- Sem Unroll ---
+            // for (int j = i + 1; j < ls->U.n; j++)
+            //     ls->U.A[line_k + j] -= (ls->U.A[line_i + j] * mp); // U(k, j) -= U(i, j) * mp
+
+            // --- Unroll ---
+            int end_step = ls->U.n - ((ls->U.n - (i + 1)) % UNROLL_STEP);
+            for (int j = i + 1; j < end_step; j += UNROLL_STEP)
+            {
+                int kj = line_k + j;
+                int ij = line_i + j;
+
+                ls->U.A[kj] -= (ls->U.A[ij] * mp);
+                ls->U.A[kj + 1] -= (ls->U.A[ij + 1] * mp);
+                ls->U.A[kj + 2] -= (ls->U.A[ij + 2] * mp);
+                ls->U.A[kj + 3] -= (ls->U.A[ij + 3] * mp);
+            }
+            // Resíduo
+            for (int j = end_step; j < ls->U.n; j++)
+                ls->U.A[line_k + j] -= (ls->U.A[line_i + j] * mp);
         }
     }
     return 0;

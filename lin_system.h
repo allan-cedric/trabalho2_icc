@@ -4,6 +4,8 @@
 // Bibliotecas
 #include "matrix.h"
 
+#define UNROLL_STEP 4
+
 // Estrutura de dados de um sistema linear
 typedef struct lin_system_t
 {

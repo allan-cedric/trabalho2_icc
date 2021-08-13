@@ -5,3 +5,4 @@ sample.sh
 *.o
 main
 main_optimized
+main_unoptimized

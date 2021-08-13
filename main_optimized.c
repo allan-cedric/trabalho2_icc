@@ -1,3 +1,10 @@
+// Source file: 'main_unoptimized.c'
+// Autores:
+// Allan Cedric G. B. Alves da Silva - GRR20190351
+// Gabriel N. Hishida do Nascimento - GRR20190361
+
+// Versão otimizada para análise de desempenho
+
 #include "interpol.h"
 #include <likwid.h>
 
